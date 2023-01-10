@@ -40,7 +40,6 @@ public class HomeController {
     public String detailsSeo(Model model,
                              @PathVariable(name = "studentId") Long id,
                              @PathVariable(name = "link") String link) {
-
         BitlabStudent student = studentService.getStudent(id);
         model.addAttribute("studentObj", student);
         model.addAttribute("faculties", facultyService.getFaculties());
