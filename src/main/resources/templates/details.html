@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th = "http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/main.html">
+<div layout:fragment="mainContent">
+    <div class="row" th:if = "${studentObj!=null}">
+
+        <h4 class="text-center">List of assigned subjects</h4>
+        <table class="table table-striped mt-3">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>NAME</th>
+                <th>CODE</th>
+                <th>CREDITS</th>
+                <th style="width: 10%;">REMOVE</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="sub : ${studentObj.subjects}">
+                <td th:text="${sub.id}"></td>
+                <td th:text="${sub.name}"></td>
+                <td th:text="${sub.code}"></td>
+                <td th:text="${sub.credits}"></td>
+                <td class="text-center">
+                    <form th:action="@{'/unassign-subject'}" method="post">
+                        <input type="hidden" name="subject_id" th:value="${sub.id}">
+                        <input type="hidden" name="student_id" th:value="${studentObj.id}">
+                        <button class="btn btn-danger btn-sm"> - </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <h4 class="text-center mt-5">List of possible subjects</h4>
+        <table class="table table-striped mt-3">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>NAME</th>
+                <th>CODE</th>
+                <th>CREDITS</th>
+                <th style="width: 10%;">ADD</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="sub : ${subjects}">
+                <td th:text="${sub.id}"></td>
+                <td th:text="${sub.name}"></td>
+                <td th:text="${sub.code}"></td>
+                <td th:text="${sub.credits}"></td>
+                <td class="text-center">
+                    <form th:action="@{'/assign-subject'}" method="post">
+                        <input type="hidden" name="subject_id" th:value="${sub.id}">
+                        <input type="hidden" name="student_id" th:value="${studentObj.id}">
+                        <button class="btn btn-success btn-sm"> + </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="col-6 mx-auto">
+            <form th:action="@{'/savestudent'}" method="post">
+                <input type="hidden" name="id" th:value="${studentObj.id}">
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <label>NAME : </label>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <input type="text" name="name" class="form-control"
+                               required placeholder="Insert name" th:value="${studentObj.name}">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <label>SURNAME : </label>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <input type="text" name="surname" class="form-control"
+                               required placeholder="Insert surname" th:value="${studentObj.surname}">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <label>FACULTY : </label>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <select class="form-select" name="faculty.id">
+                            <option th:each="fac : ${faculties}"
+                                    th:text="${fac.name + ' - ' + fac.code}"
+                                    th:selected="${studentObj.faculty!=null && fac.id==studentObj.faculty.id}"
+                                    th:value="${fac.id}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <label>GPA : </label>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <input type="text" name="gpa" class="form-control"
+                               required placeholder="Insert gpa" th:value="${studentObj.gpa}">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <button class="btn btn-success">UPDATE STUDENT</button>
+                        <button type="button" class="btn btn-danger ms-2" data-bs-toggle="modal" data-bs-target="#deleteModal">DELETE STUDENT</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal fade" id="deleteModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form th:action="@{'/deletestudent'}" method="post">
+                        <input type="hidden" name="id" th:value="${studentObj.id}">
+                        <div class="modal-header">
+                            <h3 class="modal-title fs-5" id="staticBackdropLabel">Delete Student</h3>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <h1 class="text-center">
+                                ARE YOU SURE?
+                            </h1>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">NO</button>
+                            <button class="btn btn-primary">YES</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row" th:if="${studentObj==null}">
+        <div class="col-12">
+            <h1 class="text-center">404 STUDENT NOT FOUND</h1>
+        </div>
+    </div>
+</div>
+</html>

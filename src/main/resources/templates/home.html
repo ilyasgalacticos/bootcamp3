@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th = "http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/main.html">
+    <div layout:fragment="mainContent">
+        <div class="row">
+            <div class="col-12">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>NAME</th>
+                        <th>SURNAME</th>
+                        <th>FACULTY</th>
+                        <th>GPA</th>
+                        <th style = "width: 10%;">DETAILS</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="stObj : ${studenty}" th:style="${stObj.gpa<2.0?'color:red;':(stObj.gpa==4.0?'color:darkgreen;':'color:blue;')}">
+                        <td th:text = "${stObj.id}"></td>
+                        <td th:text = "${stObj.name}"></td>
+                        <td th:text = "${stObj.surname}"></td>
+                        <td th:text = "${stObj.faculty.name + ' / ' + stObj.faculty.code}"></td>
+                        <td th:text = "${stObj.gpa}"></td>
+                        <td>
+                            <a class="btn btn-primary btn-sm" th:href="@{'/details/' + ${stObj.id} + '/'+ ${stObj.link} + '.html'}">
+                                DETAILS
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</html>
